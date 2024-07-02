@@ -78,7 +78,8 @@ Interpreter::VisitorRetValue Interpreter::visit(
   auto leftValue = expr->leftExpression()->accept(*this);
   auto rightValue = expr->rightExpression()->accept(*this);
   // todo: study type checking here: require(Set)
-  switch (expr->operation().type()) {
+  const auto& token = expr->operation();
+  switch (token.type()) {
     case TokenType::EQUAL:
       return leftValue->isEqualTo(rightValue);
     case TokenType::NOT_EQUAL:
@@ -94,9 +95,9 @@ Interpreter::VisitorRetValue Interpreter::visit(
     case TokenType::NOT_SUBSET:
       return leftValue->isNotSubsetOf(rightValue);
     default:
-      throw std::logic_error("Operation " +
-                             TokenTypeToString(expr->operation().type()) +
-                             " is not supported for a operator expression");
+      throw std::logic_error("Operation " + TokenTypeToString(token.type()) +
+                             " is not supported for a operator expression at " +
+                             token.location().str());
   }
 }
 
@@ -112,7 +113,7 @@ Interpreter::VisitorRetValue Interpreter::visit(
 ast::NodeVisitor::VisitorRetValue Interpreter::visit(
     ast::exprs::VirtualSetExpression* expr) {
   auto function = std::make_unique<values::functions::ProgramFunction>(
-      Token(TokenType::IDENTIFIER, L""), std::vector{expr->parameter()},
+      Token(TokenType::IDENTIFIER, L"", {}), std::vector{expr->parameter()},
       expr->expression());
   return std::make_unique<values::sets::VirtualSetValue>(std::move(function));
 }

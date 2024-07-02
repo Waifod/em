@@ -184,7 +184,8 @@ Token Parser::consume(TokenType tokenType) {
   if (match(tokenType)) {
     return previous();
   }
-  throw std::logic_error("Expected " + TokenTypeToString(tokenType));
+  throw std::logic_error("Expected " + TokenTypeToString(tokenType) + " at " +
+                         mTokens[mPosition].location().str());
 }
 
 bool Parser::match(TokenType tokenType) { return match({tokenType}); }

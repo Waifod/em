@@ -1,25 +1,29 @@
 #pragma once
 
 #include <vector>
+
 #include "Token.h"
 
 namespace em {
 
-  class Lexer {
-   public:
-    explicit Lexer(std::wstring mProgram);
+class Lexer {
+ public:
+  explicit Lexer(std::wstring mProgram);
 
-    std::vector<Token> scanTokens();
+  std::vector<Token> scanTokens();
 
-   private:
-    Token scanNumber();
+ private:
+  Token scanNumber();
 
-    Token scanIdentifier();
+  Token scanIdentifier();
 
-    static bool isValidForIdentifier(wchar_t character);
+  unsigned int updatePosition(int offset = 1);
 
-    std::wstring mProgram;
-    unsigned int mPosition{0};
-  };
+  static bool isValidForIdentifier(wchar_t character);
+
+  std::wstring mProgram;
+  unsigned int mPosition{0};
+  Token::Location mLocation{1, 1};
+};
 
 }  // namespace em

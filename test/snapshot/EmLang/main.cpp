@@ -10,11 +10,13 @@ const std::string EXPECTED_OUTPUT_FILES_NAME = "expected_output.txt";
 }  // namespace
 
 int main() {
-  test::utils::runSnapshotTests(
-      SNAPSHOTS_PATH, INPUT_FILES_NAME, EXPECTED_OUTPUT_FILES_NAME,
-      [](const auto& input) {
-        auto outputStream = std::make_shared<std::stringstream>();
-        em::EmLang::runProgram(input, outputStream);
-        return em::utils::string::stringToWstring(outputStream->str());
-      });
+  return test::utils::runSnapshotTests(
+             SNAPSHOTS_PATH, INPUT_FILES_NAME, EXPECTED_OUTPUT_FILES_NAME,
+             [](const auto& input) {
+               auto outputStream = std::make_shared<std::stringstream>();
+               em::EmLang::runProgram(input, outputStream);
+               return em::utils::string::stringToWstring(outputStream->str());
+             })
+             ? EXIT_SUCCESS
+             : EXIT_FAILURE;
 }
