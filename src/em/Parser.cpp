@@ -57,8 +57,9 @@ std::unique_ptr<ast::exprs::Expression> Parser::parseAssignment() {
 std::unique_ptr<ast::exprs::Expression> Parser::parseBelonging() {
   auto left = parseEquality();
   while (match({TokenType::ELEMENT_OF})) {
+    auto operatorToken = previous();
     left = std::make_unique<ast::exprs::OperatorExpression>(
-        std::move(left), previous(), parseSetOperation());
+        std::move(left), operatorToken, parseSetOperation());
   }
   return left;
 }
@@ -66,8 +67,9 @@ std::unique_ptr<ast::exprs::Expression> Parser::parseBelonging() {
 std::unique_ptr<ast::exprs::Expression> Parser::parseEquality() {
   auto left = parseSetOperation();
   while (match({TokenType::EQUAL, TokenType::NOT_EQUAL})) {
+    auto operatorToken = previous();
     left = std::make_unique<ast::exprs::OperatorExpression>(
-        std::move(left), previous(), parseSetOperation());
+        std::move(left), operatorToken, parseSetOperation());
   }
   return left;
 }
@@ -76,8 +78,9 @@ std::unique_ptr<ast::exprs::Expression> Parser::parseSetOperation() {
   auto left = parseSet();
   while (match({TokenType::UNION, TokenType::INTERSECTION, TokenType::SUBSET,
                 TokenType::NOT_SUBSET})) {
+    auto operatorToken = previous();
     left = std::make_unique<ast::exprs::OperatorExpression>(
-        std::move(left), previous(), parseSet());
+        std::move(left), operatorToken, parseSet());
   }
   return left;
 }
