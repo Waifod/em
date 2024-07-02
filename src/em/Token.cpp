@@ -17,7 +17,7 @@ Token::Location Token::location() const { return mLocation; }
 
 std::ostream& operator<<(std::ostream& os, const Token& token) {
   os << "(" << TokenTypeToString(token.mType) << ", '"
-     << utils::string::wStringToString(token.mText) << "', ' "
+     << utils::string::wStringToString(token.mText) << "', '"
      << token.mLocation.str().c_str() << "')";
   return os;
 }
